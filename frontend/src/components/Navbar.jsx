@@ -5,9 +5,14 @@ import { Link } from "react-router-dom";
 import Login from "../pages/Login";
 import Swal from "sweetalert2";
 const url = import.meta.env.VITE_API_URL
+import { RingLoader } from "react-spinners";
+import { toast } from "react-toastify";
+
+
 export default function Navbar(){
 
   const [showProfile, setShowProfile] = useState(false);
+  const [loading, setloading] = useState(false)
 const avatars =  [
   "/avatars/a1.jpg",
   "/avatars/a2.jpg",
@@ -23,6 +28,23 @@ const avatars =  [
   "/avatars/a12.jpg",
 ];
     const image = localStorage.getItem("pic") || avatars[0];
+
+   
+    const [darkMode, setDarkMode] = useState( localStorage.getItem("dark") === "true");
+    
+
+    useEffect(() => {
+        localStorage.setItem("dark", darkMode);
+
+        if (darkMode) {
+          document.body.classList.add("dark");
+        } else {
+          document.body.classList.remove("dark");
+        }
+      }, [darkMode]);
+    const toggleTheme = () => {
+      setDarkMode(!darkMode);
+    };
 
   const profileRef = useRef(null);
   useEffect(()=>{
@@ -87,6 +109,7 @@ const avatars =  [
       if (!result.isConfirmed) return;
 
       try {
+        setloading(true)
         const res = await axios.delete(`${url}/deleteuser`,{withCredentials:true})
         if(res.data.success){
           const response = await axios.post(`${url}/logout`,{},{withCredentials:true});
@@ -94,14 +117,15 @@ const avatars =  [
               navigate('/');
               location.reload()
             }else{
-              console.log(res.data.message);
+              toast.info(res.data.message)
             }
         }else{
-          console.log(res.data.message);
+          toast.info(res.data.message)
         }
       } catch (error) {
         console.log(error.message);
-      }
+        toast.info(error.message)
+      }finally{setloading(false)}
     }
 
 
@@ -118,16 +142,19 @@ const avatars =  [
       if (!result.isConfirmed) return;
 
       try {
+        setloading(true)
         const res = await axios.post(`${url}/logout`,{},{withCredentials:true});
         if(res.data.success){
           navigate('/');
+          toast.info(res.data.message)
           location.reload()
         }else{
-          console.log(res.data.message);
+          toast.info(res.data.message)
         }
       } catch (error) {
         console.log(error.message);
-      }
+        toast.info(error.message);
+      }finally{setloading(false)}
     } 
 
     const gotoprofil = ()=>{
@@ -135,7 +162,9 @@ const avatars =  [
     }
 
     return(
+       
         <nav className="navbar">
+          {loading && (<div className="loader-container"><RingLoader  color="black"></RingLoader></div>)}
       {/* Logo / Title */}
       <div className="pack">
       <h1 className="navbar-title">
@@ -172,6 +201,9 @@ const avatars =  [
             {/* <button>Settings</button> */}
             <button onClick={deleteuser}>Delete Account</button>
             <button onClick={logout}>Logout</button>
+            <button onClick={toggleTheme}>
+            {darkMode ? "☀️ Light" : "🌙 Dark"}
+          </button>
           </div></div>
           :  
           <Link className="link" to='/login'><h3>Login</h3></Link>}

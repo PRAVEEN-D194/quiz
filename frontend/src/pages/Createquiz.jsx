@@ -3,7 +3,9 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 const url = import.meta.env.VITE_API_URL
-
+import {RotateLoader} from "react-spinners"
+import Footer from "../components/Footer";
+import Navbar from "../components/Navbar";
 export default function Createquiz(){
 
     const[Title, setTitle]=useState("");
@@ -13,6 +15,9 @@ export default function Createquiz(){
     const [questiontitle, setquestiontitle] = useState("");
     const [dontshow, setdontshow] = useState(true);
     const [current, setcurrent] = useState(0);
+
+    const [loading, setloading]=useState(false);
+
     const [answers, setAnswers] = useState([
     { text: "", isCorrect: false },
     { text: "", isCorrect: false },
@@ -64,6 +69,7 @@ export default function Createquiz(){
 
     const oncreate = async()=>{
         try {
+          setloading(true)
             const res = await axios.post(`${url}/createquiz`,{ Title, questions});
             Swal.fire({
               icon: "success",
@@ -76,11 +82,12 @@ export default function Createquiz(){
             navigate('/');
         } catch (error) {
             console.log(error);
-        }
+        }finally{setloading(false)}
     }
 
-    return(
+    return(<>     <Navbar></Navbar>
         <div className="create-quiz-container">
+            {loading && (<div className="loader-container"><RotateLoader  color="black"></RotateLoader></div>)}
 {!dontshow &&
 <div className="create-wrapper">
 <div className="createfinal">
@@ -197,7 +204,10 @@ export default function Createquiz(){
   </form>
 </div>
   )}
+  <Footer></Footer>
 
 </div>
+</>
+ 
     )
 }

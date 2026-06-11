@@ -1,5 +1,6 @@
 
 import { useLocation } from "react-router-dom";
+import { useState } from "react";
 import Confetti from "react-confetti";
 import { useNavigate } from "react-router-dom";
 const url = import.meta.env.VITE_API_URL
@@ -26,6 +27,23 @@ if(total === score && total >= 10){
   point=point+10;
 }
 // localStorage.setItem("point", point+Number(score));
+
+
+  const [darkMode, setDarkMode] = useState( localStorage.getItem("dark") === "true");
+    
+
+    useEffect(() => {
+        localStorage.setItem("dark", darkMode);
+
+        if (darkMode) {
+          document.body.classList.add("dark");
+        } else {
+          document.body.classList.remove("dark");
+        }
+      }, [darkMode]);
+    const toggleTheme = () => {
+      setDarkMode(!darkMode);
+    };
 
 const changescore = async()=>{
   try {

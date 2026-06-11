@@ -4,6 +4,10 @@ import axios from "axios"
 import Navbar from "../components/Navbar";
 import Searchquiz from "../components/Searchquiz";
 import { toast } from "react-toastify";
+
+import { HashLoader} from "react-spinners";
+import Footer from "../components/Footer";
+
 const url = import.meta.env.VITE_API_URL
 
 export default function Home(){
@@ -15,24 +19,39 @@ export default function Home(){
     const [start, setstart] = useState(false);
     const [timer, settimer] = useState(5)
 
+    const [loading, setloading] = useState(false);
     const [search, setsearch] = useState(false);
-
+    const [scroll, setscroll] = useState(false);
 
     const isauth = async()=>{
       try {
+        setloading(true);
         const res = await axios.post(`${url}/isauth`, {}, {withCredentials:true});
         if(res.data.success){
           setquiz([])
           setsearch(true);
           return
         }
+        
         toast.warn("You need to log in to access the Quiz Galata");
         navigate('/login')
       } catch (error) {
         console.log(error);
+      }finally{
+        setloading(false)
       }
     }
-
+    if(scroll) {
+      setTimeout(() => {
+        window.scrollTo({
+              top: document.body.scrollHeight,
+              behavior: "smooth",
+          });
+          setscroll(false)
+      }, 10);
+          
+      
+}
 
     const onstart = ()=>{
       isauth();
@@ -87,8 +106,8 @@ export default function Home(){
   </div>
 }
 
-{ search && <Searchquiz setquiz={setquiz} setsearch={setsearch} ></Searchquiz>}
-
+{ search && <Searchquiz setquiz={setquiz} setscroll={setscroll} setsearch={setsearch} ></Searchquiz>}
+{loading && <div className="loader-container"><HashLoader size={50} color="gray"></HashLoader></div>}
 
     {start && (
   <div className="modal-overlay">
@@ -141,6 +160,7 @@ export default function Home(){
         
     ))}
         </div>}
+    <Footer></Footer>
     </>
     )
 }

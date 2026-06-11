@@ -28,6 +28,23 @@
     const progress =
     ((current) / Number(questions.length-1)) * 100;
 
+    const [darkMode, setDarkMode] = useState( localStorage.getItem("dark") === "true");
+    
+
+    useEffect(() => {
+        localStorage.setItem("dark", darkMode);
+
+        if (darkMode) {
+          document.body.classList.add("dark");
+        } else {
+          document.body.classList.remove("dark");
+        }
+      }, [darkMode]);
+    const toggleTheme = () => {
+      setDarkMode(!darkMode);
+    };
+
+
     const navigate = useNavigate();
     const onhandler = (ans)=>{
             setselected(ans);
@@ -150,7 +167,8 @@
         key={i}
         onClick={() => onhandler(ans)}
         disabled={selected !== null}
-        className={ `${showans && ans.isCorrect ? "correct-but" : "" }
+        className={ `
+          ${showans && ans.isCorrect ? "correct-but" : "" }
           ${showans && !ans.isCorrect? "wrong-but" : "" }`}
       >
         {ans.text}

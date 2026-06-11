@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { FaPen } from "react-icons/fa";
 const url = import.meta.env.VITE_API_URL
 import { toast } from "react-toastify";
+import {CircleLoader} from "react-spinners"
 
 
 export default function Profile() {
@@ -13,7 +14,9 @@ export default function Profile() {
   const [point, setpoint] =useState(0);
   const [editname, seteditname] = useState(false);
 
-  
+  const [loading, setloading] = useState(false)
+
+
 const avatars =  [
   "/avatars/a1.jpg",
   "/avatars/a2.jpg",
@@ -35,6 +38,23 @@ const avatars =  [
     fileRef.current.click();
   };
 
+    const [darkMode, setDarkMode] = useState( localStorage.getItem("dark") === "true");
+    
+
+    useEffect(() => {
+        localStorage.setItem("dark", darkMode);
+
+        if (darkMode) {
+          document.body.classList.add("dark");
+        } else {
+          document.body.classList.remove("dark");
+        }
+      }, [darkMode]);
+    const toggleTheme = () => {
+      setDarkMode(!darkMode);
+    };
+
+
   const handleChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -44,6 +64,7 @@ const avatars =  [
   };
 
   const getuser = async()=>{
+    setloading(true)
       try {
         const res = await axios.get(`${url}/getuser`,{withCredentials:true});
         if(res.data.success){
@@ -55,27 +76,31 @@ const avatars =  [
         }
       } catch (error) {
         console.log(error);
-      }
+      }finally{setloading(false)}
     }
   const  changename= async()=>{
+    setloading(true)
         try {
-            console.log("hello")
             const res = await axios.put(`${url}/updateuser`,{name},{withCredentials:true});
             if(res.data.success){
                 toast.success("User name changed Successfully");
+                seteditname(false);
             }else{
                 toast.info(res.data.message);
             }
         } catch (error) {
             console.log(error);
+        }finally{
+          setloading(false)
         }
   } 
   useEffect(()=>{
-    getuser();
+      getuser();
   },[])
   return (
+    
     <div className="profile-container">
-
+      {loading && (<div className="loader-container"><CircleLoader  color="black"></CircleLoader></div>)}
       <div className="profile-card">
 
         <div className="profile-image-wrapper">
@@ -113,12 +138,12 @@ const avatars =  [
         <div className="profile-info">
           <div className="info-row">
             {editname ? (
-                <span><input type="text" value={name} onChange={(e)=>setname(e.target.value)}></input></span>
+                <span><input className="user-name" type="text" value={name} onChange={(e)=>setname(e.target.value)}></input></span>
             ):
             (<span>User Name: {name}</span>)}
 
         
-            {editname ? (<button onClick={changename}>change</button>) : (<div className="edit-pen" onClick={() => seteditname(true)} ><FaPen /></div>)}
+            {editname ? (<button className="but-change" onClick={changename}>change</button>) : (<div className="edit-pen" onClick={() => seteditname(true)} ><FaPen /></div>)}
           </div>
 
           <div className="info-row">

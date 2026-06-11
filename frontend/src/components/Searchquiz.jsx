@@ -2,30 +2,38 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 const url = import.meta.env.VITE_API_URL
-export default function Searchquiz({setquiz, setsearch}){
+import {PuffLoader} from "react-spinners"
+import { toast } from "react-toastify";
+export default function Searchquiz({setquiz,setscroll, setsearch}){
     const [link, setlink] = useState("");
+    const [loading, setloading] = useState(false);
+
         const onsearch = async()=>{
             try {
                 const trimmedLink = link.trim();
                 setlink(trimmedLink)
                 if(link.length !== 6){
-                    alert("code only 6 digit")
+                    toast.info("code only 6 digit");
                     return;
                 }
                 if(link == ""){
-                    alert("Enter the Link")
+                    toast.info("Enter the Link");
                 }
+                setloading(true)
                 const res = await axios.get(`${url}/getquestion/${link}`);
                 if(res.data.success){
                 setquiz([])
                 setquiz([res.data.quiz])
+                 
                 }
                 else{
-                    alert(res.data.message);
+                   toast.info(res.data.message);
                 }
             } catch (error) {
-                return console.log(error)
-            }
+                console.log(error)
+                toast.info(error.message);
+                return
+            }finally{setloading(false);setscroll(true);}
         }
         const navigate = useNavigate();
         const onnav = ()=>{
@@ -37,6 +45,7 @@ export default function Searchquiz({setquiz, setsearch}){
     }
     return(
         <div className="search-container">
+            {/* {loading && (<div className="loader-container"><PuffLoader  color="black"></PuffLoader></div>)} */}
         <div className="quiz-box">
         <button className="back-btn" onClick={back}>← Back</button>
     <h2 className="searchcontent">Create and Share Quizzes</h2>

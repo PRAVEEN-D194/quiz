@@ -152,7 +152,7 @@ const resendotp = async(req, res)=>{
 
 
     } catch (error) {
-        res.status(500).json({
+        return res.json({
             success:false,
             message:error.message
         })
@@ -172,21 +172,21 @@ const resetpassword = async (req, res)=>{
 
         const user = await userSchema.findOne({email});
         if(!user){
-            return res.status(404).json({
+            return res.json({
             success:false,
             message:"user not exists go to register"
         })
         }
 
         if(user.resetotp === "" || user.resetotp !== otp){
-            return res.status(400).json({
+            return res.json({
             success:false,
             message:"otp Invalid"
         })
         }
 
         if(user.resetotpexpeireat < Date.now()){
-            return res.status(400).json({
+            return res.json({
             success:false,
             message:"otp expeired go to relogin"
             })
@@ -200,13 +200,13 @@ const resetpassword = async (req, res)=>{
         user.resetotpexpeireat=0;
         await user.save();
 
-        res.status(200).json({
+        return res.json({
             success:true,
             message:"password changed successfully"
         })
                
     } catch (error) {
-        res.status(500).json({
+        return res.json({
             success:false,
             message:error.message
         })

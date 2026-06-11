@@ -5,6 +5,8 @@ import Navbar from "../components/Navbar";
 import Searchquiz from "../components/Searchquiz";
 import { toast } from "react-toastify";
 const url = import.meta.env.VITE_API_URL
+import {RiseLoader} from "react-spinners"
+import Footer from "../components/Footer";
 
 export default function Quiz(){
 
@@ -16,9 +18,11 @@ export default function Quiz(){
     const [start, setstart] = useState(false);
     const [timer, settimer] = useState(5)    
     const [search, setsearch] = useState(false);
+    const [loading, setloading] = useState(false);
 
     const isauth = async()=>{
       try {
+        setloading(true)
         const res = await axios.post(`${url}/isauth`, {}, {withCredentials:true});
         if(res.data.success){
           return
@@ -27,20 +31,22 @@ export default function Quiz(){
         navigate('/login')
       } catch (error) {
         console.log(error);
-      }
+      }finally{setloading(true)}
     }
 
     useEffect(()=>{
         isauth()
         const getquiz = async()=>{
             try{
+            setloading(true)
             const res = await axios.get(`${url}/getallquestions`);
             setquiz(res.data.quiz);
             }catch(err){
                 console.log(err);
-            }
-        }
+            }finally{setloading(false)}
+        } 
         getquiz();
+       
     },[])
 
     
@@ -70,6 +76,7 @@ export default function Quiz(){
     return(
         <>
         <Navbar></Navbar>
+         {loading && <div className="loader-container"><RiseLoader  color="gray"></RiseLoader></div>}
         {start && (
   <div className="modal-overlay">
     <div className="modal">
@@ -121,6 +128,7 @@ export default function Quiz(){
         
     ))}
         </div>}
+        <Footer></Footer>
 
         </>
     )

@@ -1,8 +1,10 @@
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 const url = import.meta.env.VITE_API_URL
+import {RingLoader} from "react-spinners"
+import { toast } from "react-toastify";
 
 export default function Resetpassword() {
   const [currentotp, setotp] = useState(["", "", "", "", "", ""]);
@@ -10,6 +12,7 @@ export default function Resetpassword() {
   const [email, setemail] = useState();
   const [newPassword, setnewpassword] = useState();
 
+  const [loading, setloading] = useState(false)
   const [emailpage, setemailpage] = useState(true);
   const [otppage, setotppage] = useState(false);
   const [newpasswordpage, setnewpasswordpage] = useState(false);
@@ -56,6 +59,8 @@ export default function Resetpassword() {
     e.preventDefault();
 
     try {
+      setloading(true)
+
       const response = await axios.post(
         `${url}/resendotp`,
         { email },
@@ -68,11 +73,12 @@ export default function Resetpassword() {
         setemailpage(false);
         setotppage(true);
       } else {
-        alert(response.data.message);
+        toast.info(response.data.message);
       }
     } catch (error) {
       console.log(error);
-    }
+      toast.info(error.message);
+    }finally{setloading(false)}
   };
 
   const onotpsub = async (e) => {
@@ -86,10 +92,27 @@ export default function Resetpassword() {
     }
   };
 
+     
+      const [darkMode, setDarkMode] = useState( localStorage.getItem("dark") === "true");
+      
+  
+      useEffect(() => {
+          localStorage.setItem("dark", darkMode);
+  
+          if (darkMode) {
+            document.body.classList.add("dark");
+          } else {
+            document.body.classList.remove("dark");
+          }
+        }, [darkMode]);
+      const toggleTheme = () => {
+        setDarkMode(!darkMode);
+      };
   const onnewpasswordlsub = async (e) => {
     e.preventDefault();
 
     try {
+      setloading(true)
       const otp = currentotp.join("");
 
       const response = await axios.post(
@@ -106,16 +129,19 @@ export default function Resetpassword() {
 
       if (response.data.success) {
         navigate("/login");
+        toast.success(response.data.message);
       } else {
-        alert(response.data.message);
+       toast.info(response.data.message);
       }
     } catch (error) {
       console.log(error);
-    }
+      toast.info(error.message);
+    }finally{setloading(false)}
   };
 
   return (
     <>
+    {loading && (<div className="loader-container"><RingLoader  color="black"></RingLoader></div>)}
       {emailpage && (
         <div className="login-container">
           <form className="login-form">

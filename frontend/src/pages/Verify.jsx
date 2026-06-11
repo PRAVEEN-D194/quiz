@@ -1,15 +1,34 @@
-import { useRef, useState } from "react"
+import { useRef, useState, useEffect } from "react"
 import {Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 const url = import.meta.env.VITE_API_URL
+import {PropagateLoader} from "react-spinners"
 
 export default function Verify(){
 
 
     const [otp, setotp] = useState();
     const inputRef = useRef([]);
+    const [loading, setloading] = useState(false)
 
     const navigate = useNavigate();
+
+       
+        const [darkMode, setDarkMode] = useState( localStorage.getItem("dark") === "true");
+        
+    
+        useEffect(() => {
+            localStorage.setItem("dark", darkMode);
+    
+            if (darkMode) {
+              document.body.classList.add("dark");
+            } else {
+              document.body.classList.remove("dark");
+            }
+          }, [darkMode]);
+        const toggleTheme = () => {
+          setDarkMode(!darkMode);
+        };
     const handlerfun = (e, index)=>{
       if(e.target.value.length > 0 && index < inputRef.current.length-1){
         inputRef.current[index + 1].focus();
@@ -24,7 +43,7 @@ export default function Verify(){
 
     const handlepast = (e)=>{
       e.preventDefault();
-
+      
       const past = e.clipboardData.getData("text");
       const pasteArray = past.split("");
       pasteArray.forEach((char, index)=>{
@@ -36,6 +55,7 @@ export default function Verify(){
 
     const onsub = async (e)=>{
       try {
+        setloading(true);
         e.preventDefault();
         const otparray = inputRef.current.map((e)=>e.value);
         const otp = otparray.join('');
@@ -44,16 +64,18 @@ export default function Verify(){
         });
         if(response.data.success){
           navigate('/');
+          toast.success(response.data.message);
         }else{
-          alert(response.data.message);
-          console.log(response.data.message);
+          toast.info(response.data.message);
         }
 
       } catch (error) {
         console.log(error)
-      }
+        toast.info(error.message);
+      }finally{setloading(false)}
     }
     return(<>
+    {loading && (<div className="loader-container"><PropagateLoader  color="gray"></PropagateLoader></div>)}
     <div className="verify-container">
       <div className="verify-card" onPaste={(e) => handlepast(e)}>
         <h1>Verify OTP</h1>

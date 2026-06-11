@@ -1,13 +1,16 @@
 import { Link } from "react-router-dom"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import {Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 const url = import.meta.env.VITE_API_URL
+import {HashLoader} from "react-spinners"
+import { toast } from "react-toastify";
 export default function Login(){
 
 
     const navigate = useNavigate();
     const [login, setlogin] = useState({});
+    const [loading, setloading] = useState(false);
     const onset = (e)=>{
         const name = e.target.name;
         setlogin((prev)=>{
@@ -15,8 +18,26 @@ export default function Login(){
         })
     }
 
+   
+    const [darkMode, setDarkMode] = useState( localStorage.getItem("dark") === "true");
+    
+
+    useEffect(() => {
+        localStorage.setItem("dark", darkMode);
+
+        if (darkMode) {
+          document.body.classList.add("dark");
+        } else {
+          document.body.classList.remove("dark");
+        }
+      }, [darkMode]);
+    const toggleTheme = () => {
+      setDarkMode(!darkMode);
+    };
+
     const onsub = async (e)=>{
         e.preventDefault();
+        setloading(true);
         try {
             const response = await axios.post(`${url}/login`, login,{withCredentials: true,});
                 if(response.data.success){
@@ -29,18 +50,25 @@ export default function Login(){
               if(data.data.success){
                 navigate('/verify');
               }else{
-                navigate('/')
-                alert(data.data.message)
+     
+                toast.info(response.data.message);
               }
               }else{
-                navigate('/')
-                alert(response.data.message)
+  
+                toast.info(response.data.message);
                 }
         } catch (error) {
             console.log(error);
+            toast.info(error.message);
+        }finally{
+          setloading(false)
         }
     }
+
     return(<>
+
+    {loading && <div className="loader-container"><HashLoader size={50} color="gray"></HashLoader></div>}
+
     <div className="login-container">
       <form className="login-form">
         <h2>Login</h2>

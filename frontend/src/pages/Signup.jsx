@@ -1,26 +1,46 @@
 import { Link } from "react-router-dom"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { Navigate, useNavigate } from "react-router-dom";
+import { FaLeaf } from "react-icons/fa";
 const url = import.meta.env.VITE_API_URL
+import {ClimbingBoxLoader} from "react-spinners"
+import { toast } from "react-toastify";
 
 export default function Signup() {
   const navigate = useNavigate();
   const [signup, setsignup] = useState({});
+  const [loading, setloading] = useState(false)
   const onset = (e) => {
     const name = e.target.name;
     setsignup((prev) => {
       return { ...prev, [name]: e.target.value }
     })
   }
-
+     
+      const [darkMode, setDarkMode] = useState( localStorage.getItem("dark") === "true");
+      
+  
+      useEffect(() => {
+          localStorage.setItem("dark", darkMode);
+  
+          if (darkMode) {
+            document.body.classList.add("dark");
+          } else {
+            document.body.classList.remove("dark");
+          }
+        }, [darkMode]);
+      const toggleTheme = () => {
+        setDarkMode(!darkMode);
+      };
   const onsub = async (e) => {
     e.preventDefault();
     try {
+      setloading(true)
       const response = await axios.post(`${url}/register`, signup, {
         withCredentials: true,
       });
-      console.log(response);
+  
       if (response.data.success) {
         const data = await axios.post(`${url}/sendotp`, {}, {
           withCredentials: true,
@@ -28,16 +48,20 @@ export default function Signup() {
         if(data.data.success){
           navigate('/verify');
         }else {
+          toast.warning(response.data.message)
         console.log(response.data.message);
       }
       } else {
+        toast.warning(response.data.message)
         console.log(response.data.message);
       }
     } catch (error) {
       console.log(error);
-    }
+      toast.info(error.message);
+    }finally{setloading(false)}
   }
   return (<>
+  {loading && (<div className="loader-container"><ClimbingBoxLoader  color="black"></ClimbingBoxLoader></div>)}
     <div className="login-container">
       <form className="login-form">
         <h2>Signup</h2>
