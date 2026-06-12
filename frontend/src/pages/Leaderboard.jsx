@@ -15,7 +15,7 @@ export default function Leaderboard(){
     const getuser = async ()=>{
         try {
             setloading(true)
-            const res = await axios.get(`${url}/getalluser`);
+            const res = await axios.get(`${url}/api/v1/getalluser`);
             if(res.data.success){
                 setuser(res.data.user);
             }
@@ -32,7 +32,7 @@ export default function Leaderboard(){
     const isauth = async()=>{
       try {
         setloading(true)
-        const res = await axios.post(`${url}/isauth`, {}, {withCredentials:true});
+        const res = await axios.post(`${url}/api/v1/isauth`, {}, {withCredentials:true});
         if(res.data.success){
           return
         }

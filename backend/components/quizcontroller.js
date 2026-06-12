@@ -56,7 +56,7 @@ const createquiz = async(req, res)=>{
     if(!Title || !questions){
         return res.json({
                 success:false,
-                quiz:"give required datas",
+                quiz:"Missing Details Recreate Quiz. all  field are required",
         })
     }
     try {

@@ -70,19 +70,19 @@ const avatars =  [
 
     const getpoint = async()=>{
       try {
-        const res = await axios.get(`${url}/getuser`,{withCredentials:true});
+        const res = await axios.get(`${url}/api/v1/getuser`,{withCredentials:true});
         if(res.data.success){
           setpoint(res.data.user.point);
         }else{
-          console.log(res.data.message);
+          toast.warn(res.data.message);
         }
       } catch (error) {
-        console.log(error);
+        toast.warn(error);
       }
     }
     const isauth = async()=>{
       try{
-      const res = await axios.post(`${url}/isauth`,{},{withCredentials:true});
+      const res = await axios.post(`${url}/api/v1/isauth`,{},{withCredentials:true});
       if(res.data.success){
         getpoint();
         setuser(true);
@@ -110,9 +110,9 @@ const avatars =  [
 
       try {
         setloading(true)
-        const res = await axios.delete(`${url}/deleteuser`,{withCredentials:true})
+        const res = await axios.delete(`${url}/api/v1/deleteuser`,{withCredentials:true})
         if(res.data.success){
-          const response = await axios.post(`${url}/logout`,{},{withCredentials:true});
+          const response = await axios.post(`${url}/api/v1/logout`,{},{withCredentials:true});
             if(response.data.success){
               navigate('/');
               location.reload()
@@ -123,7 +123,6 @@ const avatars =  [
           toast.info(res.data.message)
         }
       } catch (error) {
-        console.log(error.message);
         toast.info(error.message)
       }finally{setloading(false)}
     }
@@ -143,7 +142,7 @@ const avatars =  [
 
       try {
         setloading(true)
-        const res = await axios.post(`${url}/logout`,{},{withCredentials:true});
+        const res = await axios.post(`${url}/api/v1/logout`,{},{withCredentials:true});
         if(res.data.success){
           navigate('/');
           toast.info(res.data.message)
@@ -152,7 +151,7 @@ const avatars =  [
           toast.info(res.data.message)
         }
       } catch (error) {
-        console.log(error.message);
+ 
         toast.info(error.message);
       }finally{setloading(false)}
     } 

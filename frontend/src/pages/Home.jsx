@@ -26,7 +26,7 @@ export default function Home(){
     const isauth = async()=>{
       try {
         setloading(true);
-        const res = await axios.post(`${url}/isauth`, {}, {withCredentials:true});
+        const res = await axios.post(`${url}/api/v1/isauth`, {}, {withCredentials:true});
         if(res.data.success){
           setquiz([])
           setsearch(true);
@@ -57,19 +57,7 @@ export default function Home(){
       isauth();
     }
 
-    
-
-    // useEffect(()=>{
-    //     const getquiz = async()=>{
-    //         try{
-    //         const res = await axios.get("http://localhost:8000/api/v1/getallquestions");
-    //         setquiz(res.data.quiz);
-    //         }catch(err){
-    //             console.log(err);
-    //         }
-    //     }
-    //     getquiz();
-    // },[])
+  
 
     
 

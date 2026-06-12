@@ -39,9 +39,9 @@ export default function Login(){
         e.preventDefault();
         setloading(true);
         try {
-            const response = await axios.post(`${url}/login`, login,{withCredentials: true,});
+            const response = await axios.post(`${url}/api/v1/login`, login,{withCredentials: true,});
                 if(response.data.success){
-                  const data = await axios.post(`${url}/sendotp`,{},{
+                  const data = await axios.post(`${url}/api/v1/sendotp`,{},{
             withCredentials: true,});
               if(data.data.isverify){
                 navigate('/');

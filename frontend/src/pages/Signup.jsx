@@ -37,23 +37,23 @@ export default function Signup() {
     e.preventDefault();
     try {
       setloading(true)
-      const response = await axios.post(`${url}/register`, signup, {
+      const response = await axios.post(`${url}/api/v1/register`, signup, {
         withCredentials: true,
       });
   
       if (response.data.success) {
-        const data = await axios.post(`${url}/sendotp`, {}, {
+        const data = await axios.post(`${url}/api/v1/sendotp`, {}, {
           withCredentials: true,
         });
         if(data.data.success){
           navigate('/verify');
         }else {
           toast.warning(response.data.message)
-        console.log(response.data.message);
+        
       }
       } else {
         toast.warning(response.data.message)
-        console.log(response.data.message);
+  
       }
     } catch (error) {
       console.log(error);

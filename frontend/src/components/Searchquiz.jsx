@@ -20,7 +20,7 @@ export default function Searchquiz({setquiz,setscroll, setsearch}){
                     toast.info("Enter the Link");
                 }
                 setloading(true)
-                const res = await axios.get(`${url}/getquestion/${link}`);
+                const res = await axios.get(`${url}/api/v1/getquestion/${link}`);
                 if(res.data.success){
                 setquiz([])
                 setquiz([res.data.quiz])
@@ -30,7 +30,7 @@ export default function Searchquiz({setquiz,setscroll, setsearch}){
                    toast.info(res.data.message);
                 }
             } catch (error) {
-                console.log(error)
+        
                 toast.info(error.message);
                 return
             }finally{setloading(false);setscroll(true);}

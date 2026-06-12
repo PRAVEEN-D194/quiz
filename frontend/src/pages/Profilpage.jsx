@@ -4,7 +4,7 @@ import { FaPen } from "react-icons/fa";
 const url = import.meta.env.VITE_API_URL
 import { toast } from "react-toastify";
 import {CircleLoader} from "react-spinners"
-
+import { useNavigate } from "react-router-dom";
 
 export default function Profile() {
   const fileRef = useRef();
@@ -15,7 +15,7 @@ export default function Profile() {
   const [editname, seteditname] = useState(false);
 
   const [loading, setloading] = useState(false)
-
+  const navigate = useNavigate();
 
 const avatars =  [
   "/avatars/a1.jpg",
@@ -31,15 +31,16 @@ const avatars =  [
   "/avatars/a11.jpg",
   "/avatars/a12.jpg",
 ];
-    const image = localStorage.getItem("pic") || avatars[0];
+
+const image = localStorage.getItem("pic") || avatars[0];
 //   const [profilpic, setprofilpic] = useState(image || avatars[0]);
   const [showAvatars, setshowAvatars] = useState(false)
   const handleClick = () => {
     fileRef.current.click();
   };
 
-    const [darkMode, setDarkMode] = useState( localStorage.getItem("dark") === "true");
-    
+  const [darkMode, setDarkMode] = useState( localStorage.getItem("dark") === "true");
+  
 
     useEffect(() => {
         localStorage.setItem("dark", darkMode);
@@ -55,18 +56,18 @@ const avatars =  [
     };
 
 
-  const handleChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      console.log(file);
-      // later: upload or preview logic
-    }
-  };
+  // const handleChange = (e) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     console.log(file);
+  //     // later: upload or preview logic
+  //   }
+  // };
 
   const getuser = async()=>{
     setloading(true)
       try {
-        const res = await axios.get(`${url}/getuser`,{withCredentials:true});
+        const res = await axios.get(`${url}/api/v1/getuser`,{withCredentials:true});
         if(res.data.success){
           setname(res.data.user.name);
           setemail(res.data.user.email);
@@ -81,7 +82,7 @@ const avatars =  [
   const  changename= async()=>{
     setloading(true)
         try {
-            const res = await axios.put(`${url}/updateuser`,{name},{withCredentials:true});
+            const res = await axios.put(`${url}/api/v1/updateuser`,{name},{withCredentials:true});
             if(res.data.success){
                 toast.success("User name changed Successfully");
                 seteditname(false);
@@ -89,7 +90,7 @@ const avatars =  [
                 toast.info(res.data.message);
             }
         } catch (error) {
-            console.log(error);
+            toast.warn(error);
         }finally{
           setloading(false)
         }
@@ -97,6 +98,11 @@ const avatars =  [
   useEffect(()=>{
       getuser();
   },[])
+
+const changepassword = ()=>{
+  navigate('/changepassword')
+}
+
   return (
     
     <div className="profile-container">
@@ -149,6 +155,12 @@ const avatars =  [
           <div className="info-row">
             <span>User Email: {email}</span>
           </div>
+
+          <div className="info-row">
+            <span>change password</span>
+            <button className="but-change" onClick={changepassword}>change</button>
+          </div>
+
           <div className="info-row">
             <span>🪙{point}</span>
           </div>

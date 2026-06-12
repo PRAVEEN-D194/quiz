@@ -1,5 +1,6 @@
 
 const userSchema = require("../modules/userSchema");
+const bcrypt = require("bcrypt")
 
 const getuser = async (req, res) => {
     try {
@@ -7,9 +8,9 @@ const getuser = async (req, res) => {
         const user = await userSchema.findById(userid);
 
         if (!user) {
-            return res.status(404).json({
+            return res.json({
                 success: false,
-                message: "user not exists go to register"
+                message: "account not found. please register first."
             })
         }
         return res.status(200).json({
@@ -23,7 +24,7 @@ const getuser = async (req, res) => {
         })
 
     } catch (error) {
-        res.status(500).json({
+        res.json({
             success: false,
             message: error.message
         })
@@ -100,7 +101,7 @@ const deleteuser = async (req, res)=>{
         }
         res.json({
             success: true,
-            message: "user deleted successfull"
+            message: "Deleted successfull"
         })
     } catch (error) {
         res.json({
@@ -111,7 +112,7 @@ const deleteuser = async (req, res)=>{
 }
 
 
-    const getalluser = async(req, res)=>{
+const getalluser = async(req, res)=>{
         try {
             const user = await userSchema.find({}).sort({ point: -1 });
 
@@ -132,4 +133,84 @@ const deleteuser = async (req, res)=>{
         })
     }
 }
-module.exports = { getuser: getuser, updatepoint: updatepoint, deleteuser: deleteuser ,updateuser:updateuser, getalluser:getalluser}
+
+const checkpassword = async (req, res)=>{
+
+    const {userid, password} = req.body;
+
+    if(!userid || !password){
+        return res.json({
+            success:false,
+            message:"Missing Details"
+        })
+    }
+    try {
+        const user = await userSchema.findOne({_id: userid});
+
+        if(!user){
+            return res.json({
+            success:false,
+            message:"Account not found. Please register first."
+        })
+        }
+
+        const match = await bcrypt.compare(password, user.password);
+
+            if(!match){
+                    return res.json({
+                    success:false,
+                    message:"Invalid password."
+                })
+            }
+
+        return res.status(200).json({
+            success:true,
+            message:"Password confirmed."
+        })
+        
+
+    } catch (error) {
+        return res.json({
+            success:false,
+            message:error.message
+        })
+    }
+}
+
+const updatepassword = async (req, res) => {
+    const { userid, password } = req.body;
+    if (!userid || !password) {
+        return res.json({
+            success: false,
+            message: "Missing Details"
+        });
+    }
+
+    try {
+        const user = await userSchema.findById(userid);
+
+        if (!user) {
+            return res.json({
+                success: false,
+                message: "User does not exist, go to register"
+            });
+        }
+
+        const hashpassword = await bcrypt.hash(password, 10);
+
+        user.password = hashpassword;
+        await user.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Password changed successfully"
+        });
+
+    } catch (error) {
+        return res.json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+module.exports = { getuser: getuser,checkpassword:checkpassword, updatepassword:updatepassword, updatepoint: updatepoint, deleteuser: deleteuser ,updateuser:updateuser, getalluser:getalluser}

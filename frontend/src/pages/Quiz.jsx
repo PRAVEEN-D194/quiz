@@ -23,7 +23,7 @@ export default function Quiz(){
     const isauth = async()=>{
       try {
         setloading(true)
-        const res = await axios.post(`${url}/isauth`, {}, {withCredentials:true});
+        const res = await axios.post(`${url}/api/v1/isauth`, {}, {withCredentials:true});
         if(res.data.success){
           return
         }
@@ -39,8 +39,13 @@ export default function Quiz(){
         const getquiz = async()=>{
             try{
             setloading(true)
-            const res = await axios.get(`${url}/getallquestions`);
+            const res = await axios.get(`${url}/api/v1/getallquestions`);
+            if(res.data.success){
             setquiz(res.data.quiz);
+            }else{
+              toast.info("No Quiz found");
+              navigate('/')
+            }
             }catch(err){
                 console.log(err);
             }finally{setloading(false)}

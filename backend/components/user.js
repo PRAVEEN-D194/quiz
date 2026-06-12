@@ -11,7 +11,7 @@ const register = async(req, res)=>{
     if(!name || !email || !password){
         return res.json({
             success:false,
-            message:"Missing Details"
+            message:"Missing required fields."
         })
     }
 
@@ -20,7 +20,7 @@ const register = async(req, res)=>{
         if(existinguser){
             return res.json({
             success:false,
-            message:"user already exists"
+            message:"an account with this email already exists."
         })
         }
 
@@ -71,7 +71,8 @@ const register = async(req, res)=>{
     </ul>
 
     <div style="text-align: center; margin: 30px 0;">
-        <a href="YOUR_WEBSITE_URL"
+       
+ <a href= ${process.env.url}
            style="background: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px;">
             Get Started
         </a>
@@ -97,12 +98,11 @@ const register = async(req, res)=>{
 
         res.json({
             success:true,
-            message:"user registered successfull"
+            message:"Registered successfull"
         })
 
     } catch (error) {
-        console.log(error);
-        res.status(500).json({
+        res.json({
             success:false,
             message:error.message
         })
@@ -113,9 +113,9 @@ const login = async(req, res)=>{
     const {email, password} = req.body;
 
     if(!email || !password){
-        return res.status(400).json({
+        return res.json({
             success:false,
-            message:"Missing Details"
+            message:"Missing required fields."
         })
     }
     try {
@@ -123,14 +123,14 @@ const login = async(req, res)=>{
     if(!user){
             return res.json({
             success:false,
-            message:"user not exists go to register"
+            message:"account not found. please register first."
         })
     }
     const match = await bcrypt.compare(password, user.password);
     if(!match){
             return res.json({
             success:false,
-            message:"Your password is wrong"
+            message:"Invalid password."
         })
     }
 
@@ -143,7 +143,7 @@ const login = async(req, res)=>{
     })
     res.json({
         success:true,
-        message:"user login successfull"
+        message:"login successful."
     })
     } catch (error) {
         res.json({
@@ -152,7 +152,6 @@ const login = async(req, res)=>{
         })
     }
 }
-
 
 const logout = async(req, res)=>{
     try {
@@ -163,10 +162,10 @@ const logout = async(req, res)=>{
         })
         res.status(200).json({
             success:true,
-            message:"logout successfull"
+            message:"Logout successfull"
         })
     } catch (error) {
-        res.status(500).json({
+        res.json({
             success:false,
             message:error.message
         })
@@ -181,13 +180,13 @@ const sendotp = async(req, res)=>{
         if(user.isverified){
             return res.json({
             success:false,
-            message:"user already verified"
+            message: "Your account is already verified."
         })
         }
         if(!user){
             return res.json({
             success:false,
-            message:"user not exists go to register"
+            message:"Account not found. Please register first."
         })
         }
 
@@ -204,6 +203,10 @@ const sendotp = async(req, res)=>{
         }
 
         await transporter.sendMail(sendmail);
+        return res.json({
+            success: true,
+            message: "Verification OTP sent successfully."
+        });
     } catch (error) {
         res.json({
             success:false,

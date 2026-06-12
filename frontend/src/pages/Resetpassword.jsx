@@ -62,7 +62,7 @@ export default function Resetpassword() {
       setloading(true)
 
       const response = await axios.post(
-        `${url}/resendotp`,
+        `${url}/api/v1/resendotp`,
         { email },
         {
           withCredentials: true,
@@ -116,7 +116,7 @@ export default function Resetpassword() {
       const otp = currentotp.join("");
 
       const response = await axios.post(
-        `${url}/resetpassword`,
+        `${url}/api/v1/resetpassword`,
         {
           email,
           otp,
@@ -128,7 +128,7 @@ export default function Resetpassword() {
       );
 
       if (response.data.success) {
-        navigate("/login");
+        navigate("/");
         toast.success(response.data.message);
       } else {
        toast.info(response.data.message);

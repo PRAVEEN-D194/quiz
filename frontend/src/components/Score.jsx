@@ -11,6 +11,7 @@ import {
 } from "react-share";
 import axios from "axios";
 import { useEffect } from "react";
+import { toast } from "react-toastify";
 
 export default function Score(){
 
@@ -22,11 +23,11 @@ const code = location.state?.code || 0;
 const timeron = location.state?.timeron || null;
 
 let point = score;
-// console.log(typeof point)
+
 if(total === score && total >= 10){
   point=point+10;
 }
-// localStorage.setItem("point", point+Number(score));
+
 
 
   const [darkMode, setDarkMode] = useState( localStorage.getItem("dark") === "true");
@@ -47,11 +48,11 @@ if(total === score && total >= 10){
 
 const changescore = async()=>{
   try {
-        const res = await axios.put(`${url}/updatepoint`, {point:point}, {withCredentials:true});
+        const res = await axios.put(`${url}/api/v1/updatepoint`, {point:point}, {withCredentials:true});
         if(res.data.success){
-          console.log("socre added")
+          toast.success("Socre added successfully")
         }else{
-          console.log(re.data.message)
+          toast.warn(re.data.message)
         }
   } catch (error) {
     console.log(error.message)
@@ -97,17 +98,17 @@ const again = ()=>{
         <h4 className="share">Share this quiz with your friends and challenge them</h4>
         <div>
             <WhatsappShareButton
-            url={`http://localhost:8000/api/v1/getquestion/${code}`}
+            url={url}
             title={`I scored ${score}/${total}`}>
             <img src="whatsapp.png" className="img-shar"></img>
           </WhatsappShareButton>
            <FacebookShareButton 
-            url={`http://localhost:8000/api/v1/getquestion/${code}`}
+            url={url}
             title={`I scored ${score}/${total}`}>
             <img src="facebook-logo.png" className="img-shar"></img>
           </FacebookShareButton>
            <TwitterShareButton
-            url={`http://localhost:8000/api/v1/getquestion/${code}`}
+            url={url}
             title={`I scored ${score}/${total}`}>
             <img src="twitter.png" className="img-shar"></img>
           </TwitterShareButton>

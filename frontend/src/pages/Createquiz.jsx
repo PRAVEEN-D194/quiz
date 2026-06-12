@@ -6,6 +6,7 @@ const url = import.meta.env.VITE_API_URL
 import {RotateLoader} from "react-spinners"
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
+import { toast } from "react-toastify";
 export default function Createquiz(){
 
     const[Title, setTitle]=useState("");
@@ -26,11 +27,19 @@ export default function Createquiz(){
   ]);
 
     const onstart = ()=>{
+      if(!Title || !noquestion){
+        toast.info("Please fill in all fields.");
+        return;
+      }
         setshowform(true);
     }
 
     const onnext = ()=>{
 
+      if(!questiontitle){
+         toast.info("Please fill in all fields.");
+        return;
+      }
         const newQuestion = {
         question: questiontitle,
         answers: [...answers]
@@ -70,7 +79,8 @@ export default function Createquiz(){
     const oncreate = async()=>{
         try {
           setloading(true)
-            const res = await axios.post(`${url}/createquiz`,{ Title, questions});
+            const res = await axios.post(`${url}/api/v1/createquiz`,{ Title, questions});
+            if(res.data.success){
             Swal.fire({
               icon: "success",
               title: "Quiz Created Successfully!",
@@ -80,8 +90,11 @@ export default function Createquiz(){
               `,
             });
             navigate('/');
+          }else{
+            toast.warn(res.data.message);
+          }
         } catch (error) {
-            console.log(error);
+            toast.warn(error);
         }finally{setloading(false)}
     }
 
@@ -92,15 +105,15 @@ export default function Createquiz(){
 <div className="create-wrapper">
 <div className="createfinal">
 <h2 className="form-title">Create Quiz</h2>
+<h4>The quiz you create will be automatically deleted after 24 hours.</h4>
 <button onClick={oncreate} className="but next-btn" >create</button>
 </div>
 </div>
 }
 
-
   {!showform && dontshow && (
     <div className="quiz-page">
-  <form className="quiz-card" onSubmit={onstart}>
+  <form className="quiz-card" >
 
     <div className="quiz-title">
       Create Quiz
@@ -130,7 +143,8 @@ export default function Createquiz(){
     </div>
 
     <button
-      type="submit"
+      type="button"
+      onClick={onstart}
       className="primary-btn"
     >
       Next
@@ -154,7 +168,7 @@ export default function Createquiz(){
         type="text"
         value={questiontitle}
         onChange={(e) => setquestiontitle(e.target.value)}
-        placeholder="Enter Question"
+        placeholder="Enter Question(required)"
         required
       />
     </div>
@@ -171,7 +185,7 @@ export default function Createquiz(){
             onChange={(e) =>
               answerhandler(index, "text", e.target.value)
             }
-            placeholder={`Answer ${index + 1}`}
+            placeholder={`Answer ${index + 1}  (required)`}
             required
           />
         </div>

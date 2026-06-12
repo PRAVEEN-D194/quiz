@@ -59,7 +59,7 @@ export default function Verify(){
         e.preventDefault();
         const otparray = inputRef.current.map((e)=>e.value);
         const otp = otparray.join('');
-        const response = await axios.post(`${url}/verify-opt`,{otp},{
+        const response = await axios.post(`${url}/api/v1/verify-opt`,{otp},{
           withCredentials: true   
         });
         if(response.data.success){

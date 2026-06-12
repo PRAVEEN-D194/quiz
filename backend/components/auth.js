@@ -12,7 +12,7 @@ const sendotp = async(req, res)=>{
         if(!user){
             return res.json({
             success:false,
-            message:"user not exists go to register"
+            message:"user not found. please register first."
         })
         }
         if(user.isverified){
@@ -53,7 +53,7 @@ const verifyotp = async(req, res)=>{
     if(!userid || !otp){
         return res.json({
             success:false,
-            message:"Missing Details"
+            message:"User ID and OTP are required."
         })
     }
 
@@ -62,20 +62,20 @@ const verifyotp = async(req, res)=>{
     if(!user){
         return res.json({
         success:false,
-        message:"user not exists go to register"
+        message:"user not found. please register first."
     })
     }
 
     if(user.verifyotp !== otp || user.verifyotp === ""){
         return res.json({
         success:false,
-        message:"invalid otp"
+        message:"Invalid OTP."
     })
     }
     if(user.verifyotpexpireat < Date.now()){
         return res.json({
         success:false,
-        message:"otp expired"
+        message:"OTP has expired. Please request a new OTP."
     })
 }
 
@@ -86,9 +86,9 @@ const verifyotp = async(req, res)=>{
 
     await user.save();
 
-    return res.status(200).json({
+    return res.json({
         success:true,
-        message:"otp verified"
+        message:"OTP verified successfully."
     })
     } catch (error) {
         res.json({
@@ -100,11 +100,11 @@ const verifyotp = async(req, res)=>{
 
 const isAuthentication = async(req, res)=>{
     try {
-        res.status(200).json({
+        res.json({
             success:true
         })
     } catch (error) {
-        res.status(500).json({
+        res.json({
             success:false,
             message:error.message
         })
@@ -115,7 +115,7 @@ const resendotp = async(req, res)=>{
     const {email} = req.body;
 
     if(!email){
-        return res.status(400).json({
+        return res.json({
             success:false,
             message:"Email is required"
         })
@@ -125,9 +125,9 @@ const resendotp = async(req, res)=>{
         
         const user = await userSchema.findOne({email});
         if(!user){
-            return res.status(404).json({
+            return res.json({
             success:false,
-            message:"user not exists go to register"
+            message:"user not found. please register first."
         })
         }
 
@@ -145,7 +145,7 @@ const resendotp = async(req, res)=>{
         }
 
         await transporter.sendMail(sendmail);
-        res.status(200).json({
+        res.json({
             success: true,
             message: "OTP sent successfully."
         });
@@ -163,7 +163,7 @@ const resetpassword = async (req, res)=>{
     const {email, otp, newPassword} = req.body;
 
     if(!email || !otp || !newPassword){
-        return res.status(400).json({
+        return res.json({
             success:false,
             message:"Missing Details"
         })
@@ -174,21 +174,21 @@ const resetpassword = async (req, res)=>{
         if(!user){
             return res.json({
             success:false,
-            message:"user not exists go to register"
+            message:"user not found. please register first."
         })
         }
 
         if(user.resetotp === "" || user.resetotp !== otp){
             return res.json({
             success:false,
-            message:"otp Invalid"
+            message:"Invalid OTP."
         })
         }
 
         if(user.resetotpexpeireat < Date.now()){
             return res.json({
             success:false,
-            message:"otp expeired go to relogin"
+            message:"OTP has expired. Please request a new OTP."
             })
         }
 

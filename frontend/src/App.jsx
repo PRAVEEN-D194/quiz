@@ -17,6 +17,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import Profil from './components/Profil';
 import Profilpage from './pages/Profilpage';
+import Changepassword from './components/Changepassword';
 
 
 function App() {
@@ -40,6 +41,8 @@ function App() {
       <Route path="/resetpassword" element={<Resetpassword/>} />
       <Route path="/profil" element={<Profil/>} />
       <Route path="/userprofil" element={<Profilpage/>} />
+      <Route path="/changepassword" element={<Changepassword/>} />
+      
     </Routes>
     </BrowserRouter>
     </>
