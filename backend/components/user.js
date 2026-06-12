@@ -34,7 +34,7 @@ const register = async(req, res)=>{
             password:hashpassword,
         })
 
-        await user.save();
+        //await user.save();
 
         const token = jwt.sign({id: user._id}, process.env.JWT_SECRTE, {expiresIn: '7d'});
 
@@ -50,46 +50,22 @@ const register = async(req, res)=>{
             to:email,
             subject: "Welcome to Quiz Galata",
             html: `
-<div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
-    
-    <h1 style="color: #4F46E5; text-align: center;">
-        🎉 Welcome to Quiz Galata!
-    </h1>
+<h2>Welcome to Quiz Galata!</h2>
 
-    <p>
-        Thank you for joining <strong>Quiz Galata</strong>.
-    </p>
+<p>Thank you for joining Quiz Galata.</p>
 
-    <p>
-        Create exciting quizzes, share them with your friends, and challenge them to beat your score.
-    </p>
+<p>Create quizzes, share them with friends, and have fun playing.</p>
 
-    <ul>
-        <li>📝 Create your own quizzes</li>
-        <li>🔗 Share quiz links instantly</li>
-        <li>🏆 Compete for high scores</li>
-        <li>🎯 Learn while having fun</li>
-    </ul>
+<p>We are happy to have you with us.</p>
 
+<p>Happy Quizzing!</p>
 
-    <p>
-        We hope you enjoy creating and playing quizzes with Quiz Galata.
-    </p>
-
-    <p>
-        Happy Quizzing! 🎉
-    </p>
-
-    <p>
-        <strong>The Quiz Galata Team</strong>
-    </p>
-
-</div>
+<p><strong>Quiz Galata Team</strong></p>
 `
         }
 
-        await transporter.sendMail(sendmessage)
-
+        //await transporter.sendMail(sendmessage)
+        await user.save();
         res.json({
             success:true,
             message:"Registered successfull"
