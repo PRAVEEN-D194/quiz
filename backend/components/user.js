@@ -34,7 +34,7 @@ const register = async(req, res)=>{
             password:hashpassword,
         })
 
-        //await user.save();
+        await user.save();
 
         const token = jwt.sign({id: user._id}, process.env.JWT_SECRTE, {expiresIn: '7d'});
 
@@ -45,27 +45,27 @@ const register = async(req, res)=>{
             maxAge:7*24*60*60*1000   
         })
 
-        const sendmessage = {
-            from:process.env.email,
-            to:email,
-            subject: "Welcome to Quiz Galata",
-            html: `
-<h2>Welcome to Quiz Galata!</h2>
+//         const sendmessage = {
+//             from:process.env.email,
+//             to:email,
+//             subject: "Welcome to Quiz Galata",
+//             html: `
+// <h2>Welcome to Quiz Galata!</h2>
 
-<p>Thank you for joining Quiz Galata.</p>
+// <p>Thank you for joining Quiz Galata.</p>
 
-<p>Create quizzes, share them with friends, and have fun playing.</p>
+// <p>Create quizzes, share them with friends, and have fun playing.</p>
 
-<p>We are happy to have you with us.</p>
+// <p>We are happy to have you with us.</p>
 
-<p>Happy Quizzing!</p>
+// <p>Happy Quizzing!</p>
 
-<p><strong>Quiz Galata Team</strong></p>
-`
-        }
+// <p><strong>Quiz Galata Team</strong></p>
+// `
+//         }
 
         //await transporter.sendMail(sendmessage)
-        await user.save();
+      
         res.json({
             success:true,
             message:"Registered successfull"

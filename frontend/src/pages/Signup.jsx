@@ -42,15 +42,19 @@ export default function Signup() {
       });
   
       if (response.data.success) {
+        try{
         const data = await axios.post(`${url}/api/v1/sendotp`, {}, {
           withCredentials: true,
         });
         if(data.data.success){
           navigate('/verify');
         }else {
-          toast.warning(response.data.message)
-        
+          toast.warning(data.data.message)
       }
+    }catch(error){
+          console.log(error);
+      toast.info(error.message);
+        }
       } else {
         toast.warning(response.data.message)
   
