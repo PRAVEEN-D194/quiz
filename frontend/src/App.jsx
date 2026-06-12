@@ -1,6 +1,6 @@
 
 import './App.css'
-import Home from './pages/home'
+import Home from './pages/Home'
 import { BrowserRouter, Route, Routes} from "react-router-dom";
 import Play from './pages/Play';
 import Createquiz from './pages/Createquiz';
