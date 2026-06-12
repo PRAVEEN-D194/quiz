@@ -67,7 +67,7 @@ export default function Login(){
 
     return(<>
 
-    {loading && <div className="loader-container"><HashLoader size={50} color="gray"></HashLoader></div>}
+    {loading && <div className="loader-container"><HashLoader  color="gray"></HashLoader></div>}
 
     <div className="login-container">
       <form className="login-form">

@@ -56,7 +56,7 @@ export default function Leaderboard(){
         <>
         <Navbar></Navbar>
 
-        {loading && <div className="loader-container"><RiseLoader size={50} color="gray"></RiseLoader></div>}
+        {loading && <div className="loader-container"><RiseLoader color="gray"></RiseLoader></div>}
 
         <div className="user-box leaderboard">
         <div>Rank</div>

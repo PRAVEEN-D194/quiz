@@ -3,8 +3,8 @@ const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 const transporter = require("../config/sendemail")
 const nodemailer = require("nodemailer");
-const dotenv = require("dotenv");
-dotenv.config();
+// const dotenv = require("dotenv");
+// dotenv.config();
 
 const register = async(req, res)=>{
     const {name, email, password} = req.body;
@@ -71,13 +71,6 @@ const register = async(req, res)=>{
         <li>🎯 Learn while having fun</li>
     </ul>
 
-    <div style="text-align: center; margin: 30px 0;">
-       
- <a href= ${process.env.url}
-           style="background: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px;">
-            Get Started
-        </a>
-    </div>
 
     <p>
         We hope you enjoy creating and playing quizzes with Quiz Galata.
@@ -217,3 +210,11 @@ const sendotp = async(req, res)=>{
 }
 
 module.exports = {register : register, login:login,  logout:logout}
+
+//  <div style="text-align: center; margin: 30px 0;">
+       
+//  <a href= ${process.env.url}
+//            style="background: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px;">
+//             Get Started
+//         </a>
+//     </div>

@@ -95,7 +95,7 @@ export default function Home(){
 }
 
 { search && <Searchquiz setquiz={setquiz} setscroll={setscroll} setsearch={setsearch} ></Searchquiz>}
-{loading && <div className="loader-container"><HashLoader size={50} color="gray"></HashLoader></div>}
+{loading && <div className="loader-container"><HashLoader color="gray"></HashLoader></div>}
 
     {start && (
   <div className="modal-overlay">
