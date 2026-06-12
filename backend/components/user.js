@@ -3,7 +3,8 @@ const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 const transporter = require("../config/sendemail")
 const nodemailer = require("nodemailer");
-
+const dotenv = require("dotenv");
+dotenv.config();
 
 const register = async(req, res)=>{
     const {name, email, password} = req.body;
