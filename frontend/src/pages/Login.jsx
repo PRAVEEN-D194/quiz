@@ -96,9 +96,9 @@ export default function Login(){
             required
           />
         </div>
-        <p className="forgot-password">
+        {/* <p className="forgot-password">
     <Link className="link" to="/resetpassword" >Forgot Password?</Link>
-</p>
+</p> */}
         <button className="auth-but" onClick={onsub} type="submit">Login</button>
         <p className="signup-text">
         Don't have an account? <span><Link className="link" to="/signup">Sign Up</Link></span>

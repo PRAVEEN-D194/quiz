@@ -74,7 +74,9 @@ export default function Changepassword (){
             required
           />
         </div>
-        <Link className="link" to="/resetpassword" >Forgot Password?</Link>
+        {/* <p className="forgot-password">
+    <Link className="link" to="/resetpassword" >Forgot Password?</Link>
+</p> */}
         <div>
         <button  type="button" className="auth-but" onClick={onsubmit}>change</button>
         </div>
