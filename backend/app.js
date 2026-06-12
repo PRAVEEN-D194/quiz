@@ -10,7 +10,7 @@ const cookieParser = require("cookie-parser");
 dotenv.config();
 const app = express();
 app.use(cookieParser());
-app.use(cors({origin: "http://localhost:5173",
+app.use(cors({origin: "https://quiz-2-i9yu.onrender.com",
     credentials: true,}));
 app.use(express.json());
 
