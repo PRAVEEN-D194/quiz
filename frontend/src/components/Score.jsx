@@ -4,6 +4,7 @@ import { useState } from "react";
 import Confetti from "react-confetti";
 import { useNavigate } from "react-router-dom";
 const url = import.meta.env.VITE_API_URL
+const shar = import.meta.env.VITE_API_URL;
 import {
   WhatsappShareButton,
   TwitterShareButton,
@@ -98,17 +99,17 @@ const again = ()=>{
         <h4 className="share">Share this quiz with your friends and challenge them</h4>
         <div>
             <WhatsappShareButton
-            url={url}
+            url={shar}
             title={`I scored ${score}/${total}${code ? ` | The Quiz code: ${code}` : ""}`}>
             <img src="whatsapp.png" className="img-shar"></img>
           </WhatsappShareButton>
            <FacebookShareButton 
-            url={url}
+            url={shar}
             title={`I scored ${score}/${total}${code ? ` | The Quiz code: ${code}` : ""}`}>
             <img src="facebook-logo.png" className="img-shar"></img>
           </FacebookShareButton>
            <TwitterShareButton
-            url={url}
+            url={shar}
             title={`I scored ${score}/${total}${code ? ` | The Quiz code: ${code}` : ""}`}>
             <img src="twitter.png" className="img-shar"></img>
           </TwitterShareButton>
