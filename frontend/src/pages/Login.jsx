@@ -48,7 +48,7 @@ export default function Login(){
                 return;
               }
               if(data.data.success){
-                navigate('/verify');
+                navigate('/');
               }else{
      
                 toast.info(response.data.message);
