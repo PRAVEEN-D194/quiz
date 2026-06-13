@@ -110,7 +110,7 @@
       
             if(current >= questions.length - 1){
               const total = questions.length;
-              const code = quiz.code;
+              const code = quiz.code || null;
                 navigate("/score", {state:{
                   timeron:timeron,
                   score:score,

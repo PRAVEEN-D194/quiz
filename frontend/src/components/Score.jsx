@@ -99,17 +99,17 @@ const again = ()=>{
         <div>
             <WhatsappShareButton
             url={url}
-            title={`I scored ${score}/${total}`}>
+            title={`I scored ${score}/${total}${code ? ` | The Quiz code: ${code}` : ""}`}>
             <img src="whatsapp.png" className="img-shar"></img>
           </WhatsappShareButton>
            <FacebookShareButton 
             url={url}
-            title={`I scored ${score}/${total}`}>
+            title={`I scored ${score}/${total}${code ? ` | The Quiz code: ${code}` : ""}`}>
             <img src="facebook-logo.png" className="img-shar"></img>
           </FacebookShareButton>
            <TwitterShareButton
             url={url}
-            title={`I scored ${score}/${total}`}>
+            title={`I scored ${score}/${total}${code ? ` | The Quiz code: ${code}` : ""}`}>
             <img src="twitter.png" className="img-shar"></img>
           </TwitterShareButton>
         </div> 
