@@ -166,6 +166,7 @@ const avatars =  [
           {loading && (<div className="loader-container"><RingLoader  color="black"></RingLoader></div>)}
       {/* Logo / Title */}
       <div className="pack">
+        <img src="/logo.png" alt="Quiz Galata Logo" className="navbar-logo" />
       <h1 className="navbar-title">
         Welcome to Quiz Galata
       </h1>
