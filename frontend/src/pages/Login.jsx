@@ -41,20 +41,20 @@ export default function Login(){
         try {
             const response = await axios.post(`${url}/api/v1/login`, login,{withCredentials: true,});
                 if(response.data.success){
-                  const data = await axios.post(`${url}/api/v1/sendotp`,{},{
-            withCredentials: true,});
-              if(data.data.isverify){
-                navigate('/');
-                return;
-              }
-              if(data.data.success){
-                navigate('/');
-              }else{
+                  navigate('/');
+            //       const data = await axios.post(`${url}/api/v1/sendotp`,{},{
+            // withCredentials: true,});
+            //   if(data.data.isverify){
+            //     navigate('/');
+            //     return;
+            //   }
+            //   if(data.data.success){
+            //     navigate('/');
+            //   }else{
      
-                toast.info(response.data.message);
-              }
+            //     toast.info(response.data.message);
+            //   }
               }else{
-  
                 toast.info(response.data.message);
                 }
         } catch (error) {

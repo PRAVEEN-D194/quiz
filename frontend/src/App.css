@@ -1654,6 +1654,9 @@ body.dark .link{
 }
 
 @media (max-width: 600px) {
+  .user-name{
+    width: 200px;
+  }
   .search-section{
     padding: 20px;
     background-color: gray;
