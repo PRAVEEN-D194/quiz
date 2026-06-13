@@ -43,13 +43,12 @@ export default function Login(){
                 if(response.data.success){
                   const data = await axios.post(`${url}/api/v1/sendotp`,{},{
             withCredentials: true,});
-              
+              if(data.data.isverify){
+                navigate('/');
+                return;
+              }
               if(data.data.success){
-               navigate('/');
-              // return;
-               //}
-              // if(data.data.success){
-              //   navigate('/verify');
+                navigate('/verify');
               }else{
      
                 toast.info(response.data.message);
