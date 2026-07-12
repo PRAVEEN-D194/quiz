@@ -73,7 +73,7 @@ const register = async (req, res) => {
     </ul>
 
     <div style="text-align: center; margin: 30px 0;">
-        <a href="${process.env.url || process.env.URL || '#'}"
+        <a href=${process.env.URL}
            style="background: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px;">
             Get Started
         </a>
