@@ -4,18 +4,21 @@ const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt")
 
 const sendotp = async(req, res)=>{
+    console.log("[Email Controller] Executing sendotp for userid:", req.body.userid);
     try {
         const {userid} = req.body;
 
         const user = await userSchema.findById(userid);
         
         if(!user){
+            console.log("[Email Controller] sendotp failed: User not found for ID:", userid);
             return res.json({
             success:false,
             message:"user not found. please register first."
         })
         }
         if(user.isverified){
+            console.log("[Email Controller] sendotp skipped: User already verified:", user.email);
             return res.json({
             success:false,
             isverify:true,
@@ -24,6 +27,7 @@ const sendotp = async(req, res)=>{
         }
 
         const otp = String(Math.floor(100000 + Math.random() * 900000));
+        console.log(`[Email Controller] Generated OTP for ${user.email}`);
         user.verifyotp = otp;
         user.verifyotpexpireat = Date.now() + 24*60*60*1000;
         await user.save();
@@ -35,12 +39,15 @@ const sendotp = async(req, res)=>{
             text: `Your otp is ${otp}. verify your account use this otp.`
         }
 
+        console.log(`[Email Controller] Triggering mail delivery to ${user.email}...`);
         await transporter.sendMail(sendmail);
+        console.log(`[Email Controller] Mail delivery succeeded for ${user.email}`);
         res.json({
             success: true,
             message: "OTP sent successfully."
         });
     } catch (error) {
+        console.error(`[Email Controller Error] sendotp failed for userid ${req.body.userid}:`, error.message);
         res.json({
             success:false,
             message:error.message
@@ -112,9 +119,11 @@ const isAuthentication = async(req, res)=>{
 }
 
 const resendotp = async(req, res)=>{
+    console.log("[Email Controller] Executing resendotp for email:", req.body.email);
     const {email} = req.body;
 
     if(!email){
+        console.log("[Email Controller] resendotp failed: Missing email in request body.");
         return res.json({
             success:false,
             message:"Email is required"
@@ -125,6 +134,7 @@ const resendotp = async(req, res)=>{
         
         const user = await userSchema.findOne({email});
         if(!user){
+            console.log("[Email Controller] resendotp failed: User not found for email:", email);
             return res.json({
             success:false,
             message:"user not found. please register first."
@@ -132,6 +142,7 @@ const resendotp = async(req, res)=>{
         }
 
         const otp = String(Math.floor(100000 + Math.random() * 900000));
+        console.log(`[Email Controller] Generated reset OTP for ${email}`);
         
         user.resetotp = otp;
         user.resetotpexpeireat = Date.now() + 24*60*60*1000;
@@ -144,7 +155,9 @@ const resendotp = async(req, res)=>{
             text: `Your otp is ${otp}. verify your account use this otp.`
         }
 
+        console.log(`[Email Controller] Triggering reset mail delivery to ${user.email}...`);
         await transporter.sendMail(sendmail);
+        console.log(`[Email Controller] Reset mail delivery succeeded for ${user.email}`);
         res.json({
             success: true,
             message: "OTP sent successfully."
@@ -152,6 +165,7 @@ const resendotp = async(req, res)=>{
 
 
     } catch (error) {
+        console.error(`[Email Controller Error] resendotp failed for ${email}:`, error.message);
         return res.json({
             success:false,
             message:error.message
