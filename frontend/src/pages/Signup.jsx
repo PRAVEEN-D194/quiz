@@ -4,7 +4,7 @@ import axios from "axios";
 import { Navigate, useNavigate } from "react-router-dom";
 import { FaLeaf } from "react-icons/fa";
 const url = import.meta.env.VITE_API_URL
-import {ClimbingBoxLoader} from "react-spinners"
+import { ClimbingBoxLoader } from "react-spinners"
 import { toast } from "react-toastify";
 
 export default function Signup() {
@@ -17,22 +17,22 @@ export default function Signup() {
       return { ...prev, [name]: e.target.value }
     })
   }
-     
-      const [darkMode, setDarkMode] = useState( localStorage.getItem("dark") === "true");
-      
-  
-      useEffect(() => {
-          localStorage.setItem("dark", darkMode);
-  
-          if (darkMode) {
-            document.body.classList.add("dark");
-          } else {
-            document.body.classList.remove("dark");
-          }
-        }, [darkMode]);
-      const toggleTheme = () => {
-        setDarkMode(!darkMode);
-      };
+
+  const [darkMode, setDarkMode] = useState(localStorage.getItem("dark") === "true");
+
+
+  useEffect(() => {
+    localStorage.setItem("dark", darkMode);
+
+    if (darkMode) {
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark");
+    }
+  }, [darkMode]);
+  const toggleTheme = () => {
+    setDarkMode(!darkMode);
+  };
   const onsub = async (e) => {
     e.preventDefault();
     try {
@@ -40,32 +40,30 @@ export default function Signup() {
       const response = await axios.post(`${url}/api/v1/register`, signup, {
         withCredentials: true,
       });
-  
       if (response.data.success) {
-        navigate('/')
-    //     try{
-    //     const data = await axios.post(`${url}/api/v1/sendotp`, {}, {
-    //       withCredentials: true,
-    //     });
-    //     if(data.data.success){
-    //       navigate('/verify');
-    //     }else {
-    //       toast.warning(data.data.message)
-    //   }
-    // }catch(error){
-    //       console.log(error);
-    //   toast.info(error.message);
-    //     }
+        try {
+          const data = await axios.post(`${url}/api/v1/sendotp`, {}, {
+            withCredentials: true,
+          });
+          if (data.data.success) {
+            navigate('/verify');
+          } else {
+            toast.warning(data.data.message)
+          }
+        } catch (error) {
+          console.log(error);
+          toast.info(error.message);
+        }
       } else {
         toast.warning(response.data.message)
       }
     } catch (error) {
       console.log(error);
       toast.info(error.message);
-    }finally{setloading(false)}
+    } finally { setloading(false) }
   }
   return (<>
-  {loading && (<div className="loader-container"><ClimbingBoxLoader  color="black"></ClimbingBoxLoader></div>)}
+    {loading && (<div className="loader-container"><ClimbingBoxLoader color="black"></ClimbingBoxLoader></div>)}
     <div className="login-container">
       <form className="login-form">
         <h2>Signup</h2>
@@ -107,7 +105,7 @@ export default function Signup() {
         </div>
         <button className="auth-but" onClick={onsub} type="submit">Signup</button>
         <p className="signup-text">
-          I have an account? <span><Link  className="link" to="/login">Login</Link></span>
+          I have an account? <span><Link className="link" to="/login">Login</Link></span>
         </p>
       </form>
     </div>

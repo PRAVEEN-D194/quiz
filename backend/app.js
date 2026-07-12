@@ -1,16 +1,16 @@
-const express = require("express");
 const dotenv = require("dotenv");
+dotenv.config();
+
+const express = require("express");
 const router = require("./routers/quizrouter");
 const dbconnection = require("./config/db")
 const cors = require("cors");
 const authrouter = require("./routers/auth");
 const userrouter = require("./routers/user");
 const cookieParser = require("cookie-parser");
-
-dotenv.config();
 const app = express();
 app.use(cookieParser());
-app.use(cors({origin: "https://quiz-2-i9yu.onrender.com",
+app.use(cors({origin: " http://localhost:5173",
     credentials: true,}));
 app.use(express.json());
 
